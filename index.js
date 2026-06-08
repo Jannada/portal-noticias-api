@@ -33,6 +33,11 @@ async function crearIndices() {
       seccion: 1
     });
 
+    //Índice por autor
+    await noticias.createIndex({
+      "autor.nombre": 1
+    });
+
     // Mostrar índices creados
     const indices = await noticias.indexes();
 
