@@ -122,6 +122,19 @@ app.get("/noticias/buscar", async (req, res) => {
 });
 
 
+// ENDPOINT 4
+app.get("/noticias/autor/:autor", async (req, res) => {
+
+  const resultado = await noticias.find({
+    "autor.nombre": req.params.autor
+  })
+  .toArray();
+
+  res.json(resultado);
+
+});
+
+
 app.listen(3000, () => {
   console.log("Servidor en puerto 3000");
 });
