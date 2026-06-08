@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 
-const uri = "Tu_URI_MONGODB";
+const uri = "TU_URI_MONGODB";
 
 const client = new MongoClient(uri, {
     tls: true
@@ -28,7 +28,7 @@ async function conectar() {
 conectar();
 
 
-// ENDPOINT 1
+// ENDPOINT  http://localhost:3000/noticias/top
 app.get("/noticias/top", async (req, res) => {
 
     const hoy = new Date();
@@ -65,11 +65,28 @@ app.get("/noticias/top", async (req, res) => {
       }
     ]).toArray();
 
-  res.json(resultado);
+    let html = `
+    <h1>Top 10 Noticias Más Leídas</h1>
+  `;
+
+  resultado.forEach(noticia => {
+
+    html += `
+      <hr>
+      <h2>${noticia.titulo}</h2>
+      <p><strong>Autor:</strong> ${noticia.autor.nombre}</p>
+      <p><strong>Sección:</strong> ${noticia.seccion}</p>
+      <p><strong>Vistas:</strong> ${noticia.metricas.vistas}</p>
+      <p>${noticia.contenido}</p>
+    `;
+
+  });
+
+  res.send(html);
 });
 
 
-// ENDPOINT 2
+// ENDPOINT 2 http://localhost:3000/noticias/seccion/Econom%C3%ADa
 app.get("/noticias/seccion/:seccion", async (req, res) => {
 
     const pagina = Number(req.query.pagina) || 1;
@@ -98,11 +115,27 @@ app.get("/noticias/seccion/:seccion", async (req, res) => {
     .limit(limite)
     .toArray();
 
-  res.json(resultado);
+    let html = `
+    <h1>Noticias de la sección: ${req.params.seccion}</h1>
+    <p>Página ${pagina}</p>
+  `;
+
+  resultado.forEach(noticia => {
+    html += `
+      <hr>
+      <h2>${noticia.titulo}</h2>
+      <p><strong>Autor:</strong> ${noticia.autor.nombre}</p>
+      <p><strong>Sección:</strong> ${noticia.seccion}</p>
+      <p><strong>Fecha:</strong> ${noticia.fecha_publicacion}</p>
+      <p><strong>Vistas:</strong> ${noticia.metricas.vistas}</p>
+    `;
+  });
+
+  res.send(html);
 });
 
 
-// ENDPOINT 3
+// ENDPOINT 3 http://localhost:3000/noticias/buscar?q=econom%C3%ADa
 app.get("/noticias/buscar", async (req, res) => {
 
     const busqueda = req.query.q;
@@ -118,11 +151,35 @@ app.get("/noticias/buscar", async (req, res) => {
     })
     .toArray();
 
-  res.json(resultado);
+    let html = `
+    <h1>Resultados de búsqueda</h1>
+    <p><strong>Término:</strong> ${busqueda}</p>
+  `;
+
+  resultado.forEach(noticia => {
+
+    html += `
+      <hr>
+      <h2>${noticia.titulo}</h2>
+
+      <p><strong>Autor:</strong> ${noticia.autor.nombre}</p>
+
+      <p><strong>Sección:</strong> ${noticia.seccion}</p>
+
+      <p><strong>Fecha:</strong> ${noticia.fecha_publicacion}</p>
+
+      <p><strong>Vistas:</strong> ${noticia.metricas.vistas}</p>
+
+      <p>${noticia.contenido}</p>
+    `;
+
+  });
+
+  res.send(html);
 });
 
 
-// ENDPOINT 4
+// ENDPOINT 4 http://localhost:3000/noticias/autor/Mar%C3%ADa%20G%C3%B3mez
 app.get("/noticias/autor/:autor", async (req, res) => {
 
   const resultado = await noticias.find({
@@ -130,7 +187,39 @@ app.get("/noticias/autor/:autor", async (req, res) => {
   })
   .toArray();
 
-  res.json(resultado);
+  let html = `
+    <h1>Noticias de ${req.params.autor}</h1>
+  `;
+
+  resultado.forEach(noticia => {
+
+    html += `
+      <hr>
+
+      <h2>${noticia.titulo}</h2>
+
+      <p><strong>Autor:</strong> ${noticia.autor.nombre}</p>
+
+      <p><strong>Sección:</strong> ${noticia.seccion}</p>
+
+      <p><strong>Estado:</strong> ${noticia.estado}</p>
+
+      <p><strong>Fecha:</strong> ${
+        noticia.fecha_publicacion
+          ? noticia.fecha_publicacion
+          : "Sin publicar"
+      }</p>
+
+      <p><strong>Vistas:</strong> ${noticia.metricas.vistas}</p>
+
+      <p><strong>Comentarios:</strong> ${noticia.metricas.comentarios}</p>
+
+      <p>${noticia.contenido}</p>
+    `;
+
+  });
+
+  res.send(html);
 
 });
 
