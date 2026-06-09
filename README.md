@@ -1,46 +1,55 @@
 
-##DESCRIPCIÓN DEL PROBLEMA
+# CMS portal noticias
+
+## DESCRIPCIÓN DEL PROBLEMA
+
 El problema que se presenta es que el canal de noticias digitales, ubicado en la República Dominicana, no tiene actualmente una manera eficiente y rápida de consultar las noticias, tanto para los lectores como para los editores y/o periodistas. Estos necesitan realizar búsquedas de distintos tipos, por clasificaciones y las 10 noticias más leídas del mes (top noticias del mes), además de la necesidad de búsquedas más rápidas que presentan. Actualmente no disponen de las opciones mencionadas, por lo que puede resultar agotador y mucho trabajo, tanto para los usuarios como para los editores y/o periodistas, encontrar una noticia específica. Usar el portal tal cual como se describe actualmente resulta en una mala experiencia para los usuarios y puede provocar la pérdida de lectores. 
 La propuesta consiste en la implementación de una solución basada MongoDB, un motor documental NoSQL que permite almacenar las noticias en un documento BSON. Estas noticias para ser almacenadas deben cumplir con las reglas de validación que fueron definidas en el JSON Schema. Se definieron las consultas que satisfacen las principales necesidades del negocio y de los usuarios y se utilizaron índices para optimizar las peticiones.
 El resultado esperado de implementar la solución es la mejora de la velocidad y eficiencia de las consultas y por lo tanto la experiencia de usuarios. Además, se espera que con esta implementación el número de lectores aumente y que los patrocinios incrementen gradualmente. 
 
 
-##STACK UTILIZADO
+## STACK UTILIZADO
+
 - Node.js
 - Express.js
 - MongoDB Atlas
 
-##CÓMO EJECUTAR EL PROYECTO
 
-###Clonar repositorio
+## CÓMO EJECUTAR EL PROYECTO
+
+### Clonar repositorio
 
 ```bash
 git clone https://github.com/Jannada/portal-noticias-api.git
 cd portal-noticias-api
 
-###instalar dependencias 
+
+#### Instalar dependencias 
 npm install
 
-###Reemplazar la cadena de conexión
+#### Reemplazar la cadena de conexión
 Reemplazar const uri = "TU_URI_MONGODB"; por tu propia cadena de conexión de ATLAS.
 
-###Crear SCHEMA
+#### Crear SCHEMA
 node schema.js
 
-###Crear indices 
+#### Crear indices 
 node indexes.js
 
-###Insertar datos de prueba
+#### Insertar datos de prueba
 node seed.js
 
-###Ejecutar API
+#### Ejecutar API
 node app.js
+```
+
 Si todo funciona correctamente aparecerá:
 
 Servidor en puerto 3000
 MongoDB conectado
 
-##Endpoints
+
+## Endpoints
 
 Top 10 noticias
 
@@ -59,9 +68,63 @@ Noticias por autor
 GET /noticias/autor/María Gómez
 
 
+## Para el endpoint de crear noticias:
+
+### Crear noticia
+
+POST /noticias
+
+Ejemplo del cuerpo JSON
+```bash
+{
+  "titulo": "Nueva noticia",
+  "contenido": "Contenido de prueba",
+  "seccion": "Tecnología",
+  "estado": "Publicado",
+  "fecha_publicacion": "2026-06-09T00:00:00.000Z",
+  "autor": {
+    "nombre": "Viviana Beltre"
+  },
+  "tags": [
+    {
+      "nombre": "prueba"
+    }
+  ],
+  "metricas": {
+    "vistas": 0,
+    "comentarios": 0
+  }
+}
+```
+## Capturas de pantalla
+
+### Buscar autor
+
+![Autor](capturas/find_autor.png)
+
+### Búsqueda full-text
+
+![Full-text](capturas/find_full_text.png)
+
+
+### Búsqueda por sección
+
+![Secciones](capturas/find_seccion.png)
+
+
+### Top noticias
+
+![Top10](capturas/top_noticias.png)
+
+
+### Endpoint crear noticia
+
+![Post](capturas/post_postman.png)
+
+
 ## Arquitectura de la mini-app
 
-La mini-aplicación sigue una arquitectura de cliente-servidor donde el usuario realiza peticiones desde un navegador o desde Postman hacia la API. Esta fue desarrollada utilizando Express.js. Esta API recibe las solicitudes y ejecuta las consultas correspondientes sobre MongoDB Atlas usando el MongoDB Driver de Node.js.
+La mini-aplicación sigue una arquitectura de cliente-servidor, donde el usuario realiza peticiones desde un navegador o desde Postman hacia la API. Esta fue desarrollada utilizando Express.js. Esta API recibe las solicitudes y ejecuta las consultas sobre MongoDB Atlas usando el MongoDB Driver de Node.js.
 
 La base de datos utilizada es `portal_noticias` y la colección principal es `noticias`, donde se almacenan los artículos del periódico digital.
 

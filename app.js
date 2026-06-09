@@ -223,6 +223,24 @@ app.get("/noticias/autor/:autor", async (req, res) => {
 
 });
 
+// ENDPOINT CREAR NOTICIA
+app.post("/noticias", async (req, res) => {
+
+  const nuevaNoticia = req.body;
+
+  if (nuevaNoticia.fecha_publicacion) {
+    nuevaNoticia.fecha_publicacion = new Date(nuevaNoticia.fecha_publicacion);
+  }
+
+  const resultado = await noticias.insertOne(nuevaNoticia);
+
+  res.status(201).json({
+    mensaje: "Noticia creada correctamente",
+    id: resultado.insertedId
+  });
+
+});
+
 
 app.listen(3000, () => {
   console.log("Servidor en puerto 3000");
