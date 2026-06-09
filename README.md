@@ -36,7 +36,7 @@ node schema.js
 #### Crear indices 
 node indexes.js
 
-#### Insertar datos de prueba
+#### Insertar datos de prueba (Cargar el seed data)
 node seed.js
 
 #### Ejecutar API
